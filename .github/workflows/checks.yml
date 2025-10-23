@@ -3,7 +3,7 @@ name: Checks
 on:
   push:
     branches:
-      - '*'
+      - main
   workflow_dispatch: # allow manual trigger
 
 jobs:
@@ -19,6 +19,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Test
-        run: docker-compose run --rm app python manage.py test
+        run: docker compose run --rm app python manage.py test
       - name: Lint
-        run: docker-compose run --rm app flake8
+        run: docker compose run --rm app flake8
