@@ -1,7 +1,6 @@
 """
 Test for the user API
 """
-from core.tools import test_ok
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -49,7 +48,6 @@ class PublicUserApiTests(TestCase):
         user = get_user(payload['email'])
         self.assertTrue(user.check_password(payload['password']))
         self.assertNotIn('password', response.data)
-        test_ok("test_create_user_success")
 
     def test_user_email_already_exist_error(self):
         """Test get error if user with email exist"""
@@ -61,7 +59,6 @@ class PublicUserApiTests(TestCase):
         create_user(**payload)
         response = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        test_ok("test_user_email_already_exist_error")
 
     def test_password_too_short_error(self):
         """Test get error if password  less than 5 chars"""
@@ -74,7 +71,6 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         user_exists = filter_users(payload['email']).exists()
         self.assertFalse(user_exists)
-        test_ok("test_password_too_short_error")
 
     def test_create_token_for_user(self):
         """Test generate token for user valid credentials."""
@@ -91,7 +87,6 @@ class PublicUserApiTests(TestCase):
         response = self.client.post(TOKEN_URL, payload)
         self.assertIn('token', response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        test_ok("test_create_token_for_user")
 
     def test_create_token_bad_credentials(self):
         """Test get error if invalid credentials"""
@@ -107,7 +102,6 @@ class PublicUserApiTests(TestCase):
         response = self.client.post(TOKEN_URL, payload)
         self.assertNotIn('token', response.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        test_ok("test_create_token_bad_credentials")
 
     def test_using_blank_password(self):
         """Test return error if password is blank"""
@@ -118,7 +112,6 @@ class PublicUserApiTests(TestCase):
         response = self.client.post(TOKEN_URL, payload)
         self.assertNotIn('token', response.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        test_ok("test_using_blank_password ")
 
     def test_user_retrieve_authentication_required(self):
         """Test authentication is required to retrieve user"""

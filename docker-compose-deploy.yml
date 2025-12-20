@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    volumes:
+      - static-data:/volumes/web
+    environment:
+      - DB_HOST=db-app
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SECRET_KEY=${DJANGO_SECRET_KEY}
+      - ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+    depends_on:
+      - db-app
+
+  db-app:
+    image: postgres:13-alpine
+    restart: always
+    volumes:
+      - postgres-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - 80:8000
+    volumes:
+      - static-data:/volumes/static
+
+
+volumes:
+  postgres-db-data:
+  static-data:
